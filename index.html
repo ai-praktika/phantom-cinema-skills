@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHANTOM CINEMA SKILLS — IBRATECH.AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Barlow:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #161616;
+    --accent: #aaff00;
+    --accent2: #ff3c3c;
+    --silver: #c8c8c8;
+    --muted: #555;
+    --border: #222;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--silver);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* SCAN LINE */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* HEADER */
+  header {
+    padding: 60px 0 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    text-align: center;
+  }
+
+  .logo-wrap {
+    width: 90px;
+    height: 90px;
+    position: relative;
+  }
+
+  .logo-wrap img {
+    width: 100%;
+    filter: drop-shadow(0 0 20px rgba(170,255,0,0.15));
+  }
+
+  .brand-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .brand-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 8vw, 56px);
+    letter-spacing: 0.08em;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .brand-name span {
+    color: var(--accent);
+  }
+
+  .brand-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .divider-line {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent) 30%, var(--accent) 70%, transparent);
+    opacity: 0.3;
+    margin: 8px 0;
+  }
+
+  /* HERO LABEL */
+  .hub-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--accent);
+    text-transform: uppercase;
+    padding: 6px 20px;
+    border: 1px solid rgba(170,255,0,0.2);
+    background: rgba(170,255,0,0.03);
+  }
+
+  .hub-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 10vw, 80px);
+    letter-spacing: 0.05em;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .hub-desc {
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    max-width: 480px;
+    line-height: 1.7;
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    margin: 32px 0;
+    overflow: hidden;
+  }
+
+  .stat {
+    flex: 1;
+    padding: 16px 20px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+
+  .stat:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* SKILLS GRID */
+  .section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .skills-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 60px;
+  }
+
+  .skill-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 24px 28px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 20px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: pointer;
+  }
+
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--accent-card, var(--accent));
+    transform: scaleY(0);
+    transition: transform 0.2s;
+    transform-origin: bottom;
+  }
+
+  .skill-card:hover {
+    border-color: #333;
+    transform: translateX(4px);
+  }
+
+  .skill-card:hover::before {
+    transform: scaleY(1);
+  }
+
+  .skill-card.red { --accent-card: var(--accent2); }
+  .skill-card.cyan { --accent-card: #00d4ff; }
+  .skill-card.gold { --accent-card: #ffaa00; }
+  .skill-card.purple { --accent-card: #aa66ff; }
+
+  .card-left { display: flex; flex-direction: column; gap: 6px; }
+
+  .card-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    color: var(--accent-card, var(--accent));
+    text-transform: uppercase;
+  }
+
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.05em;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .card-desc {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 300;
+    letter-spacing: 0.03em;
+    line-height: 1.5;
+  }
+
+  .card-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+
+  .card-btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--accent-card, var(--accent));
+    border: 1px solid var(--accent-card, var(--accent));
+    padding: 6px 14px;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+
+  .card-btn:hover {
+    background: var(--accent-card, var(--accent));
+    color: #000;
+  }
+
+  .card-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--border);
+    line-height: 1;
+    user-select: none;
+  }
+
+  /* COMING SOON CARD */
+  .skill-card.coming {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .skill-card.coming::after {
+    content: 'COMING SOON';
+    position: absolute;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.1em;
+    color: #333;
+  }
+
+  .footer-brand span { color: var(--accent); }
+
+  .footer-links {
+    display: flex;
+    gap: 20px;
+  }
+
+  .footer-links a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.15s;
+  }
+
+  .footer-links a:hover { color: var(--accent); }
+
+  /* PULSE DOT */
+  .pulse {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* FADE IN */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .skill-card {
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .skill-card:nth-child(1) { animation-delay: 0.05s; }
+  .skill-card:nth-child(2) { animation-delay: 0.1s; }
+  .skill-card:nth-child(3) { animation-delay: 0.15s; }
+  .skill-card:nth-child(4) { animation-delay: 0.2s; }
+  .skill-card:nth-child(5) { animation-delay: 0.25s; }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    .skill-card { grid-template-columns: 1fr; }
+    .card-right { flex-direction: row; align-items: center; }
+    .card-num { font-size: 32px; }
+    .stats-bar { flex-direction: column; }
+    .stat { border-right: none; border-bottom: 1px solid var(--border); }
+    .stat:last-child { border-bottom: none; }
+    footer { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <div class="logo-wrap">
+      <img src="https://ai-praktika.github.io/phantom-cinema-skills/logo_ibrahatuev.png" 
+           alt="ibrahatuev logo"
+           onerror="this.style.display='none'">
+    </div>
+    <div class="brand-block">
+      <div class="brand-name">IBRA<span>TECH</span>.AI</div>
+      <div class="brand-sub">Life in every frame</div>
+    </div>
+
+    <div class="divider-line"></div>
+
+    <div class="hub-label"><span class="pulse"></span>Skill Library — Active</div>
+    <div class="hub-title">PHANTOM CINEMA<br>SKILLS HUB</div>
+    <div class="hub-desc">
+      Готовые промпт-скиллы для AI видео и фотопродакшна.<br>
+      Копируй. Генерируй. Публикуй.
+    </div>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-num" id="skill-count">2</div>
+      <div class="stat-label">Скиллов опубликовано</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">3</div>
+      <div class="stat-label">AI движка</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Возможностей</div>
+    </div>
+  </div>
+
+  <div class="section-label">Опубликованные скиллы</div>
+
+  <div class="skills-grid">
+
+    <div class="skill-card" onclick="window.open('https://ai-praktika.github.io/phantom-cinema-skills/phantom_cinema_skills.html','_blank')">
+      <div class="card-left">
+        <div class="card-tag">Seedance 2.0 + Nano Banana 2 · Video</div>
+        <div class="card-title">PHANTOM CINEMA ENGINE V3.0</div>
+        <div class="card-desc">Мастер-скилл для кинематографической AI-видеогенерации. PBR рендер, операторские движения, identity lock.</div>
+      </div>
+      <div class="card-right">
+        <div class="card-num">01</div>
+        <a href="https://ai-praktika.github.io/phantom-cinema-skills/phantom_cinema_skills.html" 
+           target="_blank" class="card-btn" onclick="event.stopPropagation()">ОТКРЫТЬ →</a>
+      </div>
+    </div>
+
+    <div class="skill-card red" onclick="window.open('https://ai-praktika.github.io/phantom-cinema-skills/nana_banana_pro_skill.html','_blank')">
+      <div class="card-left">
+        <div class="card-tag">Nano Banana Pro · Image</div>
+        <div class="card-title">NANA BANANA PRO MASTER BRIEF</div>
+        <div class="card-desc">Максимальный фотореализм для Nano Banana Pro. Технический промпт-конструктор для коммерческой съёмки.</div>
+      </div>
+      <div class="card-right">
+        <div class="card-num">02</div>
+        <a href="https://ai-praktika.github.io/phantom-cinema-skills/nana_banana_pro_skill.html" 
+           target="_blank" class="card-btn" onclick="event.stopPropagation()">ОТКРЫТЬ →</a>
+      </div>
+    </div>
+
+    <div class="skill-card cyan coming">
+      <div class="card-left">
+        <div class="card-tag">Kling 3.0 · Video</div>
+        <div class="card-title">KLING 3.0 MOTION BRIEF</div>
+        <div class="card-desc">Скилл для работы с Kling 3.0 — флюидная анимация, motion transfer, кинематографика.</div>
+      </div>
+      <div class="card-right">
+        <div class="card-num">03</div>
+      </div>
+    </div>
+
+    <div class="skill-card gold coming">
+      <div class="card-left">
+        <div class="card-tag">ElevenLabs · Audio</div>
+        <div class="card-title">PHANTOM VOICE ENGINE</div>
+        <div class="card-desc">Промпт-система для озвучки. Русскоязычный нарратив, эмоциональные режимы, синхронизация с видео.</div>
+      </div>
+      <div class="card-right">
+        <div class="card-num">04</div>
+      </div>
+    </div>
+
+    <div class="skill-card purple coming">
+      <div class="card-left">
+        <div class="card-tag">Higgsfield MCP · Workflow</div>
+        <div class="card-title">CLAUDE × HIGGSFIELD PIPELINE</div>
+        <div class="card-desc">Полный workflow: Claude пишет промпты → Higgsfield генерирует → автопубликация через MCP.</div>
+      </div>
+      <div class="card-right">
+        <div class="card-num">05</div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-brand">IBRA<span>TECH</span>.AI · Phantom Cinema Skills</div>
+    <div class="footer-links">
+      <a href="https://instagram.com/ibrahatuev" target="_blank">Instagram</a>
+      <a href="https://instagram.com/ibratech.ai" target="_blank">IBRATECH</a>
+      <a href="https://github.com/ai-praktika/phantom-cinema-skills" target="_blank">GitHub</a>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>
